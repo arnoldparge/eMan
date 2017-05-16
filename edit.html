@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <script src="js/angular.js"></script>
+
+    <script src="js/sample.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/sample.css" />
+
+    <script>
+        var eid, name, desg, rate, eid;
+
+        window.onload = function () {
+
+            name = document.getElementById("txtName");
+            desg = document.getElementById("txtDesg");
+            rate = document.getElementById("txtRate");
+
+            var emp;
+
+            function getParameterByName(name1, url) {
+                if (!url) url = window.location.href;
+                name1 = name1.replace(/[\[\]]/g, "\\$&");
+                var regex = new RegExp("[?&]" + name1 + "(=([^&#]*)|&|#|$)"),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, " "));
+            }
+
+            emp = JSON.parse(localStorage.getItem("emp"));
+
+            eid = getParameterByName('id');
+
+            document.getElementById("txtName").value = emp.emps[eid].Name;
+            desg.value = emp.emps[eid].Desg;
+            rate.value = emp.emps[eid].Rate;
+        }
+
+        function updateEmp()
+        {
+            var dupe = false;
+
+            if (document.getElementById("txtName").value.trim() == "" || desg.value.trim() == "" || rate.value.trim() == "")
+                alert("Please fill all the details");
+            else {
+                var emp = JSON.parse(localStorage.getItem("emp"));
+
+                for (var i = 0 ; i < emp.emps.length ; i++)
+                {
+                    if (emp.emps[i].Name == document.getElementById("txtName").value.trim() && emp.emps[i].Desg == desg.value.trim() && emp.emps[i].Rate == rate.value.trim()) {
+                        dupe = true;
+                    }
+                    else
+                        dupe = false;
+                }
+
+                if (dupe)
+                    alert("This record already exist");
+                else
+                {
+                    emp.emps.splice(eid, 1);
+
+                    emp.emps.push({
+                        "Name": document.getElementById("txtName").value,
+                        "Desg": desg.value,
+                        "Rate": rate.value
+                    });
+
+                    localStorage.setItem("emp", JSON.stringify(emp));
+
+                    document.getElementById("txtName").value = "";
+                    desg.value = "";
+                    rate.value = "";
+
+                    window.open("index.html", "_self");
+                }
+            }
+        }
+    </script>
+
+</head>
+<body>
+
+    <div class="app_header">
+        eManagement
+    </div>
+
+    <div style="height:50px;"></div>
+
+    <div class="app_body">
+
+        <div class="app_list">
+            Name:
+            <br />
+            <input id="txtName" type="text" class="app_form_field" />
+        </div>
+
+        <div class="app_list">
+            Designation:
+            <br />
+            <input id="txtDesg" type="text" class="app_form_field" />
+        </div>
+
+        <div class="app_list">
+            Rating:
+            <br />
+            <input id="txtRate" type="text" class="app_form_field" />
+        </div>
+
+        <div class="app_list">
+            <input id="btnAddEmp" type="submit" value="Update" onclick="updateEmp()" class="app_form_field" />
+        </div>
+
+    </div>
+
+    <div style="height:50px;"></div>
+
+    <div class="app_footer">
+
+        <table>
+            <tr>
+                <td class="menu_item">
+                    <img src="icons/back.png" onclick="toHome()" />
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+</body>
+</html>

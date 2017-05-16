@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <script src="js/angular.js"></script>
+
+    <script src="js/sample.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/sample.css" />
+
+    <script>
+        window.onload = function () {
+
+            if (localStorage.getItem("emp") == null) {
+                var emp = {
+                    "emps": [
+                        {
+                            "Name": "Sample Name",
+                            "Desg": "Sample Designation (This is a demo data, you may delete this)",
+                            "Rate": 0
+                        },
+                        {
+                            "Name": "q",
+                            "Desg": "q",
+                            "Rate": 1
+                        }
+                    ]
+                };
+
+                localStorage.setItem("emp", JSON.stringify(emp));
+
+            }
+        }
+    </script>
+
+</head>
+<body>
+
+    <div class="app_header">
+        eManagement
+    </div>
+
+    <div style="height: 50px;"></div>
+
+    <div class="app_body" ng-app="myApp" ng-controller="myCtrl">
+
+        <input type="text" ng-model="sr" class="app_form_field" style="text-align:center" placeholder="Search here" />
+
+        <div class="app_list" ng-repeat="e in emp.emps | filter:sr">
+            <div class="card_head">
+                {{e.Name}}
+            </div>
+            <b>Designation</b>: {{e.Desg}}
+            <hr />
+            <b>Rating</b>: {{e.Rate}}
+            <hr />
+
+            <table>
+                <tr>
+                    <td class="car_menu_item">
+                        <img src="icons/edit.png" ng-click="editEmp($index)" />
+                    </td>
+                    <td class="car_menu_item">
+                        <img src="icons/delete.png" ng-click='delEmp($index)' />
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        var app = angular.module('myApp', []);
+        app.controller('myCtrl', function ($scope) {
+            $scope.emp = JSON.parse(localStorage.getItem("emp"));
+
+            $scope.delEmp = function (i)
+            {
+                var cnf = confirm("Are you sure you want to delete the employee?");
+                if (cnf) {
+                    $scope.emp.emps.splice(i, 1);
+                    localStorage.setItem("emp", JSON.stringify($scope.emp));
+                }
+            }
+
+            $scope.editEmp = function (i)
+            {
+                window.open("edit.html?id=" + i, "_self");
+            }
+
+        });
+    </script>
+
+    <div style="height: 50px;"></div>
+
+    <div class="app_footer">
+
+        <table>
+            <tr>
+                <td class="menu_item">
+                    <img src="icons/add.png" onclick="openAdd()" />
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+</body>
+</html>

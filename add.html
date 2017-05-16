@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <script src="js/angular.js"></script>
+
+    <script src="js/sample.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/sample.css" />
+
+    <script>
+        function addNewEmp()
+        {
+            var name=document.getElementById("txtName");
+            var desg=document.getElementById("txtDesg");
+            var rate = document.getElementById("txtRate");
+
+            var dupe = false;
+
+            if (name.value.trim() == "" || desg.value.trim() == "" || rate.value.trim() == "")
+                alert("Please fill all the details");
+            else {
+                var emp = JSON.parse(localStorage.getItem("emp"));
+
+                for (var i = 0 ; i < emp.emps.length ; i++)
+                {
+                    if (emp.emps[i].Name == name.value.trim() && emp.emps[i].Desg == desg.value.trim() && emp.emps[i].Rate == rate.value.trim()) {
+                        dupe = true;
+                    }
+                    else
+                        dupe = false;
+                }
+
+                if (dupe)
+                    alert("This record already exist");
+                else
+                {
+                    emp.emps.push({
+                        "Name": name.value,
+                        "Desg": desg.value,
+                        "Rate": rate.value
+                    });
+
+                    localStorage.setItem("emp", JSON.stringify(emp));
+
+                    name.value = "";
+                    desg.value = "";
+                    rate.value = "";
+
+                    window.open("index.html", "_self");
+                }
+            }
+        }
+    </script>
+
+</head>
+<body>
+
+    <div class="app_header">
+        eManagement
+    </div>
+
+    <div style="height:50px;"></div>
+
+    <div class="app_body">
+
+        <div class="app_list">
+            Name:
+            <br />
+            <input id="txtName" type="text" class="app_form_field" />
+        </div>
+
+        <div class="app_list">
+            Designation:
+            <br />
+            <input id="txtDesg" type="text" class="app_form_field" />
+        </div>
+
+        <div class="app_list">
+            Rating:
+            <br />
+            <input id="txtRate" type="text" class="app_form_field" />
+        </div>
+
+        <div class="app_list">
+            <input id="btnAddEmp" type="submit" value="Add" onclick="addNewEmp()" class="app_form_field" />
+        </div>
+
+    </div>
+
+    <div style="height:50px;"></div>
+
+    <div class="app_footer">
+
+        <table>
+            <tr>
+                <td class="menu_item">
+                    <img src="icons/back.png" onclick="toHome()" />
+                </td>
+            </tr>
+        </table>
+
+    </div>
+
+</body>
+</html>
